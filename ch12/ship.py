@@ -4,7 +4,7 @@ class Ship():
     def __init__(self, ai_settings, screen):
         self.screen = screen
         self.ai_settings = ai_settings
-        self.image = pygame.image.load("./images/ship.bmp")
+        self.image = pygame.image.load("./ch12/images/ship.bmp")
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
         self.center = float(self.rect.centerx)
