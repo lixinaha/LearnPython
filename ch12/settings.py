@@ -4,6 +4,7 @@ class Settings():
         self.screen_height = 600
         self.bg_color = (230, 230, 230)
         self.ship_speed_factor = 1.5
+        self.ship_limit = 3
 
         self.bullet_speed_factor = 1
         self.bullet_width = 30
@@ -12,5 +13,5 @@ class Settings():
         self.bullet_max = 3
 
         self.alien_speed_factor = 1
-        self.aliens_drop_speed = 10
+        self.aliens_drop_speed = 50
         self.aliens_direction = 1   # 1: right, -1: left

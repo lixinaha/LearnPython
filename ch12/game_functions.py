@@ -2,6 +2,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_events(ai_settings, screen, ship, bullets):
@@ -49,11 +50,13 @@ def update_bullets(bullets, aliens, screen, ship, ai_setting):
     # print(str(len(bullets)))
     check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets)
 
+
 def check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets):
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
     if len(aliens) == 0:
         bullets.empty()
         create_aliens(ai_setting, screen, aliens, ship)
+
 
 def fire_bullet(ai_setting, screen, ship, bullets):
     if (len(bullets) < ai_setting.bullet_max):
@@ -93,9 +96,12 @@ def get_number_rows(ai_setting, ship_height, alien_height):
     return number_rows
 
 
-def update_aliens(aliens, ai_setting):
+def update_aliens(aliens, ai_setting, ship, state, screen, bullets):
     check_aliens_edge(ai_setting, aliens)
     aliens.update()
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(ai_setting, state, screen, ship, aliens, bullets)
+    check_aliens_bottom(ai_setting, state, screen, ship, aliens, bullets)
 
 
 def check_aliens_edge(ai_setting, aliens):
@@ -110,3 +116,22 @@ def change_aliens_direction(ai_setting, aliens):
         alien.rect.y += ai_setting.aliens_drop_speed
     ai_setting.aliens_direction *= -1
 
+
+def ship_hit(ai_setting, state, screen, ship, aliens, bullets):
+    if state.ship_left > 0:
+        state.ship_left -= 1
+        aliens.empty()
+        bullets.empty()
+        create_aliens(ai_setting, screen, aliens, ship)
+        ship.center_ship()
+        sleep(1)
+    else:
+        state.game_active = False
+        print("game over!")
+
+def check_aliens_bottom(ai_setting, state, screen, ship, aliens, bullets):
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            ship_hit(ai_setting, state, screen, ship, aliens, bullets)
+            break

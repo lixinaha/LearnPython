@@ -4,7 +4,7 @@ from pygame.sprite import Group
 from settings import Settings
 from ship import Ship
 import game_functions as gf
-
+from game_state import GameState
 
 def run_game():
     pygame.init()
@@ -18,11 +18,17 @@ def run_game():
     aliens = Group()
     gf.create_aliens(ai_setting, screen, aliens, ship)
 
+    state = GameState(ai_setting)
+
     while True:
         gf.check_events(ai_setting, screen, ship, bullets)
-        ship.update()
-        gf.update_bullets(bullets, aliens, screen, ship, ai_setting)
-        gf.update_aliens(aliens, ai_setting)
+        if state.game_active:
+            ship.update()
+            gf.update_bullets(bullets, aliens, screen, ship, ai_setting)
+            gf.update_aliens(aliens, ai_setting, ship, state, screen, bullets)
+        else:
+            aliens.empty()
+            gf.create_aliens(ai_setting, screen, aliens, ship)    
         gf.update_screen(ai_setting, screen, ship, bullets, aliens)
 
 run_game()
