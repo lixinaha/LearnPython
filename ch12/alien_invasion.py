@@ -5,12 +5,14 @@ from settings import Settings
 from ship import Ship
 import game_functions as gf
 from game_state import GameState
+from button import Button
 
 def run_game():
     pygame.init()
     ai_setting = Settings()
     screen = pygame.display.set_mode((ai_setting.screen_width, ai_setting.screen_height))
     pygame.display.set_caption("Alien Invation")
+    play_button = Button(ai_setting, screen, "Play")
 
     ship = Ship(ai_setting, screen)
     bullets = Group()
@@ -21,7 +23,7 @@ def run_game():
     state = GameState(ai_setting)
 
     while True:
-        gf.check_events(ai_setting, screen, ship, bullets)
+        gf.check_events(ai_setting, screen, ship, bullets, state, play_button, aliens)
         if state.game_active:
             ship.update()
             gf.update_bullets(bullets, aliens, screen, ship, ai_setting)
@@ -29,6 +31,6 @@ def run_game():
         else:
             aliens.empty()
             gf.create_aliens(ai_setting, screen, aliens, ship)    
-        gf.update_screen(ai_setting, screen, ship, bullets, aliens)
+        gf.update_screen(ai_setting, screen, ship, bullets, aliens, state, play_button)
 
 run_game()
