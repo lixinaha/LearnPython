@@ -1,6 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
-
+from typing import List
 
 class Bullet(Sprite):
     def __init__(self, ai_settings, screen, ship):
@@ -12,7 +12,7 @@ class Bullet(Sprite):
         self.y = float(self.rect.y)
         self.color = ai_settings.bullet_color
         self.speed_factor = ai_settings.bullet_speed_factor
-
+        
     def update(self):
         self.y -= self.speed_factor
         self.rect.y = self.y

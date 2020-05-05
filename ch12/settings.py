@@ -15,3 +15,17 @@ class Settings():
         self.alien_speed_factor = 1
         self.aliens_drop_speed = 50
         self.aliens_direction = 1   # 1: right, -1: left
+        self.speedup_scale = 1.1
+        self.init_dynamic_setting()
+
+    def init_dynamic_setting(self):
+        self.ship_limit = 1.5
+        self.bullet_speed_factor = 3
+        self.alien_speed_factor = 1
+        self.aliens_direction = 1
+
+
+    def increase_speed(self):
+        self.ship_speed_factor *= self.speedup_scale
+        self.bullet_speed_factor *= self.speedup_scale
+        self.alien_speed_factor *= self.speedup_scale

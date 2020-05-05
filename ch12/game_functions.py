@@ -4,6 +4,7 @@ from bullet import Bullet
 from alien import Alien
 from time import sleep
 from button import Button
+from ship import Ship
 
 def check_events(ai_settings, screen, ship, bullets, state, play_button, aliens):
     for event in pygame.event.get():
@@ -20,6 +21,7 @@ def check_events(ai_settings, screen, ship, bullets, state, play_button, aliens)
 def check_play_button(state, play_button, mouse_x, mouse_y, aliens, bullets, ai_setting, screen, ship):
     button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not state.game_active:
+        ai_setting.init_dynamic_setting()
         pygame.mouse.set_visible(False)
         state.reset()
         state.game_active = True
@@ -29,7 +31,7 @@ def check_play_button(state, play_button, mouse_x, mouse_y, aliens, bullets, ai_
         ship.center_ship()
 
 
-def update_screen(ai_settings, screen, ship, bullets, aliens, state, play_button):
+def update_screen(ai_settings, screen, ship: Ship, bullets, aliens, state, play_button: Button):
     screen.fill(ai_settings.bg_color)
     ship.blitme()
     for bullet in bullets.sprites():
@@ -37,7 +39,7 @@ def update_screen(ai_settings, screen, ship, bullets, aliens, state, play_button
     aliens.draw(screen)
     if not state.game_active:
         play_button.draw_button()
-
+    
     pygame.display.flip()
 
 
@@ -72,6 +74,7 @@ def check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets):
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
     if len(aliens) == 0:
         bullets.empty()
+        ai_setting.increase_speed()
         create_aliens(ai_setting, screen, aliens, ship)
 
 
