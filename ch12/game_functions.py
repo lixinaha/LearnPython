@@ -5,6 +5,8 @@ from alien import Alien
 from time import sleep
 from button import Button
 from ship import Ship
+from scoreboard import Scoreboard
+from game_state import GameState
 
 def check_events(ai_settings, screen, ship, bullets, state, play_button, aliens):
     for event in pygame.event.get():
@@ -31,12 +33,13 @@ def check_play_button(state, play_button, mouse_x, mouse_y, aliens, bullets, ai_
         ship.center_ship()
 
 
-def update_screen(ai_settings, screen, ship: Ship, bullets, aliens, state, play_button: Button):
+def update_screen(ai_settings, screen, ship: Ship, bullets, aliens, state, play_button: Button, borad: Scoreboard):
     screen.fill(ai_settings.bg_color)
     ship.blitme()
     for bullet in bullets.sprites():
         bullet.draw()
     aliens.draw(screen)
+    borad.show_score()
     if not state.game_active:
         play_button.draw_button()
     
@@ -61,17 +64,23 @@ def check_keydown_event(event, ai_setting, screen, ship, bullets):
         sys.exit(0)
 
 
-def update_bullets(bullets, aliens, screen, ship, ai_setting):
+def update_bullets(bullets, aliens, screen, ship, ai_setting, board: Scoreboard, state: GameState):
     bullets.update()
     for b in bullets.copy():
         if b.rect.bottom <= 0:
             bullets.remove(b)
     # print(str(len(bullets)))
-    check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets)
+    check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets, board, state)
 
 
-def check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets):
-    pygame.sprite.groupcollide(bullets, aliens, True, True)
+def check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets, board: Scoreboard, state: GameState):
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)    
+    if collisions:
+        for alien in collisions.values():
+            state.score += ai_setting.alien_point*len(alien)
+            board.prep_score()
+        check_high_score(state, board)
+
     if len(aliens) == 0:
         bullets.empty()
         ai_setting.increase_speed()
@@ -156,3 +165,8 @@ def check_aliens_bottom(ai_setting, state, screen, ship, aliens, bullets):
         if alien.rect.bottom >= screen_rect.bottom:
             ship_hit(ai_setting, state, screen, ship, aliens, bullets)
             break
+
+def check_high_score(state: GameState, borad: Scoreboard):
+    if state.score > state.high_score:
+        state.high_score = state.score
+        borad.prep_high_score()
