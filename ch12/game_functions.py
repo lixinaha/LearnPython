@@ -71,7 +71,7 @@ def update_bullets(bullets, aliens, screen, ship, ai_setting):
 
 
 def check_bullet_alien_collisions(ai_setting, screen, ship, aliens, bullets):
-    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+    pygame.sprite.groupcollide(bullets, aliens, True, True)
     if len(aliens) == 0:
         bullets.empty()
         ai_setting.increase_speed()
