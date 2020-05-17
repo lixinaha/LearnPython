@@ -25,11 +25,11 @@ def run_game():
     board = Scoreboard(ai_setting, screen, state)
 
     while True:
-        gf.check_events(ai_setting, screen, ship, bullets, state, play_button, aliens)
+        gf.check_events(ai_setting, screen, ship, bullets, state, play_button, aliens, board)
         if state.game_active:
             ship.update()
             gf.update_bullets(bullets, aliens, screen, ship, ai_setting, board, state)
-            gf.update_aliens(aliens, ai_setting, ship, state, screen, bullets)
+            gf.update_aliens(aliens, ai_setting, ship, state, screen, bullets, board)
         else:
             aliens.empty()
             gf.create_aliens(ai_setting, screen, aliens, ship)    

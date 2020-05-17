@@ -11,7 +11,7 @@ class Settings():
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
         
-        self.aliens_drop_speed = 10
+        self.aliens_drop_speed = 20
 
         self.speedup_scale = 1.1
         self.score_scale = 1.5
